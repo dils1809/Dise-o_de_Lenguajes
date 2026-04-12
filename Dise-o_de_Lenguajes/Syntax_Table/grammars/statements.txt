@@ -1,0 +1,7 @@
+# Simple Statement Language — LL(1)
+# start: P
+
+P -> S L
+L -> S L | eps
+S -> id = E ; | return E ;
+E -> id | num
