@@ -41,7 +41,7 @@ class Grammar:
 
     def _extract_terminals(self):
         terminals = set()
-        for nt, prods in self.productions.items():
+        for _, prods in self.productions.items():
             for prod in prods:
                 for symbol in prod:
                     if symbol not in self.non_terminals and symbol != 'ε':
@@ -133,30 +133,26 @@ def main():
                 print("Error: no-terminal inválido o posición fuera de rango")
 
         elif opcion == '2':
-            print("\nIngrese items (uno por línea, formato: 'nt, prod, posición')")
-            print("Ejemplo: E, E + T, 0")
-            print("Ingrese línea vacía para terminar:")
+            print("\nIngrese items uno por uno. Deje el no-terminal vacío para terminar.")
 
             items = set()
             while True:
-                line = input().strip()
-                if not line:
+                nt = input("\nNo-terminal (vacío para terminar): ").strip()
+                if not nt:
                     break
+                prod_str = input("Producción (separada por espacios): ").strip()
+                prod = prod_str.split()
+                print(f"Posición del punto (0 = inicio, {len(prod)} = final): ", end="")
                 try:
-                    parts = [p.strip() for p in line.split(',')]
-                    if len(parts) != 3:
-                        print("Error: debe tener 3 partes separadas por comas")
-                        continue
-                    nt = parts[0]
-                    prod = parts[1].split()
-                    pos = int(parts[2])
-                    if nt in grammar.non_terminals and 0 <= pos <= len(prod):
-                        items.add(Item((nt, prod), pos))
-                        print(f"  Agregado: {Item((nt, prod), pos)}")
-                    else:
-                        print("Error: no-terminal inválido o posición fuera de rango")
+                    pos = int(input().strip())
                 except ValueError:
-                    print("Error: formato inválido")
+                    pos = 0
+
+                if nt in grammar.non_terminals and 0 <= pos <= len(prod):
+                    items.add(Item((nt, prod), pos))
+                    print(f"  Agregado: {Item((nt, prod), pos)}")
+                else:
+                    print("Error: no-terminal inválido o posición fuera de rango")
 
             if items:
                 print(f"\nConjunto de items ingresados ({len(items)}):")
